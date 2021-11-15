@@ -58,7 +58,6 @@ void gate_H(custatevecHandle_t handle,
 	matrix[3].x *= -1;
 	matrix[3].y *= -1;
 
-	std::printf("[%10s] custatevecApplyMatrix_bufferSize start\n", __func__);
 	void* working_memory;
 	std::size_t working_memory_size;
 	CHECH_CUSTATEVEC_ERROR(custatevecApplyMatrix_bufferSize(
@@ -78,9 +77,7 @@ void gate_H(custatevecHandle_t handle,
 	if (working_memory_size) {
 		cudaMalloc(&working_memory, working_memory_size);
 	}
-	std::printf("[%10s] cudaMalloc start (%lu B)\n", __func__, working_memory_size);
 
-	std::printf("[%10s] custatevecApplyMatrix start\n", __func__);
 	int targets[] = {(int)target_qubit};
 	int controls[] = {};
 	CHECH_CUSTATEVEC_ERROR(custatevecApplyMatrix(
@@ -106,6 +103,7 @@ void gate_H(custatevecHandle_t handle,
 }
 
 int main() {
+	custatevecLoggerSetLevel(5);
 	constexpr unsigned num_qubits = 29;
 	constexpr std::size_t statevector_length = 1lu << num_qubits;
 
@@ -114,7 +112,6 @@ int main() {
 
 	init_statevector(statevector, statevector_length);
 
-	std::printf("[%10s] custatevecCreate start\n", __func__);
 	custatevecHandle_t handle;
 	CHECH_CUSTATEVEC_ERROR(custatevecCreate(&handle));
 
@@ -122,7 +119,6 @@ int main() {
 		gate_H(handle, statevector, i, num_qubits);
 	}
 
-	std::printf("[%10s] custatevecDestroy start\n", __func__);
 	CHECH_CUSTATEVEC_ERROR(custatevecDestroy(handle));
 
 	cudaFree(statevector);
