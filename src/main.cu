@@ -26,24 +26,7 @@ void check_custatevec_error(
 		const char* const funcname
 		) {
 	if (status != CUSTATEVEC_STATUS_SUCCESS) {
-		auto get_str = [](const custatevecStatus_t state) {
-			switch(state) {
-#define CUSTATEVEC_ERROR_CASE_MESSAGE(x) case x: return #x
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_SUCCESS                 );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_NOT_INITIALIZED         );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_ALLOC_FAILED            );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_INVALID_VALUE           );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_ARCH_MISMATCH           );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_EXECUTION_FAILED        );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_INTERNAL_ERROR          );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_NOT_SUPPORTED           );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_INSUFFICIENT_WORKSPACE  );
-				CUSTATEVEC_ERROR_CASE_MESSAGE(CUSTATEVEC_STATUS_SAMPLER_NOT_PREPROCESSED);
-			default:
-				return "Unknown";
-			}
-		};
-		std::printf("ERROR: %s @ %s, line %u (%s)\n", get_str(status), filepath, line, funcname);
+		std::printf("ERROR: %s @ %s, line %u (%s)\n", custatevecGetErrorString(status), filepath, line, funcname);
 		exit(1);
 	}
 }
